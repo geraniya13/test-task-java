@@ -9,42 +9,41 @@ import java.util.regex.Pattern;
 
 public class task3 {
     public static void main(String[] args) throws Exception {
-            if ((args.length < 3 & args.length > 1) || args.length == 0) {
-                System.out.println("Add appropriate arguments: filename date1 date2");
+        if (args.length != 3) {
+            System.out.println("Add appropriate arguments: filename date1 date2");
+        } else {
+
+            BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+            String start = reader.readLine();
+            String barrelVolume = reader.readLine();
+            String waterAmount = reader.readLine();
+            ArrayList<String> date = new ArrayList<>();
+            ArrayList<String> user = new ArrayList<>();
+            ArrayList<String> info = new ArrayList<>();
+
+            while (reader.ready()) {
+                String[] s = reader.readLine().split(" - ");
+                date.add(s[0].trim());
+                user.add(s[1].trim());
+                info.add(s[2].trim());
             }
-            else {
 
-                BufferedReader reader = new BufferedReader(new FileReader(args[0]));
-                String start = reader.readLine();
-                String barrelVolume = reader.readLine();
-                String waterAmount = reader.readLine();
-                ArrayList<String> date = new ArrayList<>();
-                ArrayList<String> user = new ArrayList<>();
-                ArrayList<String> info = new ArrayList<>();
+            LocalDateTime d1 = getDate(args[1]);
+            LocalDateTime d2 = getDate(args[2]);
 
-                while (reader.ready()) {
-                    String[] s = reader.readLine().split(" - ");
-                    date.add(s[0].trim());
-                    user.add(s[1].trim());
-                    info.add(s[2].trim());
-                }
+            ArrayList<Integer> period = requiredIndexes(date, d1, d2);
 
-                LocalDateTime d1 = getDate(args[1]);
-                LocalDateTime d2 = getDate(args[2]);
-
-                ArrayList<Integer> period = requiredIndexes(date, d1, d2);
-
-                System.out.println(attemptsToAddWater(period, info));
-                System.out.println(addingFailPercentage(period, info));
-                System.out.println(addedWaterAmount(period, info));
-                System.out.println(failedToAddWaterAmount(period, info));
-                System.out.println(attemptsToScoopWater(period, info));
-                System.out.println(scoopFailPercentage(period, info));
-                System.out.println(scoopedWaterAmount(period, info));
-                System.out.println(failedToScoopWaterAmount(period, info));
-                System.out.println(startWaterAmount(period, info, waterAmount));
-                System.out.println(finishWaterAmount(period, info, waterAmount));
-            }
+            System.out.println(attemptsToAddWater(period, info));
+            System.out.println(addingFailPercentage(period, info));
+            System.out.println(addedWaterAmount(period, info));
+            System.out.println(failedToAddWaterAmount(period, info));
+            System.out.println(attemptsToScoopWater(period, info));
+            System.out.println(scoopFailPercentage(period, info));
+            System.out.println(scoopedWaterAmount(period, info));
+            System.out.println(failedToScoopWaterAmount(period, info));
+            System.out.println(startWaterAmount(period, info, waterAmount));
+            System.out.println(finishWaterAmount(period, info, waterAmount));
+        }
     }
 
     public static LocalDateTime getDate(String s) {
@@ -79,13 +78,13 @@ public class task3 {
 
         int start = -1;
         int finish = -1;
-        for (int i = 0; i <list1.size(); i++) {
+        for (int i = 0; i < list1.size(); i++) {
             if (d1.isBefore(list1.get(i)) || d1.isEqual(list1.get(i))) {
                 start = i;
                 break;
             }
         }
-        for (int i = 0; i <list1.size(); i++) {
+        for (int i = 0; i < list1.size(); i++) {
             if (d2.isBefore(list1.get(i)) || d2.isEqual(list1.get(i))) {
                 finish = i;
                 break;
@@ -119,8 +118,7 @@ public class task3 {
         double attempts = attemptsToAddWater(period, info);
         if (attempts == 0) {
             return "No top up";
-        }
-        else {
+        } else {
             int count = 0;
             for (int i = period.get(0); i < period.get(1); i++) {
                 if (info.get(i).contains("фейл") & info.get(i).contains("top up")) {
@@ -129,8 +127,7 @@ public class task3 {
             }
             if (count == 0) {
                 return "No Fails";
-            }
-            else {
+            } else {
                 return ((count / attempts) * 100) + "";
             }
         }
@@ -140,7 +137,7 @@ public class task3 {
         int count = 0;
         for (int i = period.get(0); i < period.get(1); i++) {
             if (info.get(i).contains("успех") & info.get(i).contains("top up")) {
-                count+= getAmount(info.get(i));
+                count += getAmount(info.get(i));
             }
         }
         return count;
@@ -150,7 +147,7 @@ public class task3 {
         int count = 0;
         for (int i = period.get(0); i < period.get(1); i++) {
             if (info.get(i).contains("фейл") & info.get(i).contains("top up")) {
-                count+= getAmount(info.get(i));
+                count += getAmount(info.get(i));
             }
         }
         return count;
@@ -170,8 +167,7 @@ public class task3 {
         double attempts = attemptsToScoopWater(period, info);
         if (attempts == 0) {
             return "No top up";
-        }
-        else {
+        } else {
             int count = 0;
             for (int i = period.get(0); i < period.get(1); i++) {
                 if (info.get(i).contains("фейл") & info.get(i).contains("scoop")) {
@@ -180,8 +176,7 @@ public class task3 {
             }
             if (count == 0) {
                 return "No Fails";
-            }
-            else {
+            } else {
                 return ((count / attempts) * 100) + "";
             }
         }
@@ -191,7 +186,7 @@ public class task3 {
         int count = 0;
         for (int i = period.get(0); i < period.get(1); i++) {
             if (info.get(i).contains("успех") & info.get(i).contains("scoop")) {
-                count+= getAmount(info.get(i));
+                count += getAmount(info.get(i));
             }
         }
         return count;
@@ -201,7 +196,7 @@ public class task3 {
         int count = 0;
         for (int i = period.get(0); i < period.get(1); i++) {
             if (info.get(i).contains("фейл") & info.get(i).contains("scoop")) {
-                count+= getAmount(info.get(i));
+                count += getAmount(info.get(i));
             }
         }
         return count;
@@ -212,10 +207,9 @@ public class task3 {
         for (int i = 0; i < period.get(0); i++) {
             if (info.get(i).contains("успех")) {
                 if (info.get(i).contains("top up")) {
-                    count+= getAmount(info.get(i));
-                }
-                else {
-                    count-= getAmount(info.get(i));
+                    count += getAmount(info.get(i));
+                } else {
+                    count -= getAmount(info.get(i));
                 }
             }
         }
@@ -227,10 +221,9 @@ public class task3 {
         for (int i = period.get(0); i < period.get(1); i++) {
             if (info.get(i).contains("успех")) {
                 if (info.get(i).contains("top up")) {
-                    count+= getAmount(info.get(i));
-                }
-                else {
-                    count-= getAmount(info.get(i));
+                    count += getAmount(info.get(i));
+                } else {
+                    count -= getAmount(info.get(i));
                 }
             }
         }
